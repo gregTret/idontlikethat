@@ -103,11 +103,26 @@ jobs:
 
     - name: Create extension package
       run: |
-        # Create zip file with all necessary files
-        zip -r "i-dont-like-that-v${{ steps.bump_version.outputs.new_version }}.zip" \
-          dist/ \
-          manifest.json \
-          icon*.png
+        # Create a temporary directory for packaging
+        mkdir -p package-temp
+        
+        # Copy all files from dist to package-temp (without the dist folder)
+        cp -r dist/* package-temp/
+        
+        # The build already copies manifest.json and icons to dist, so they should be there
+        # But if not, copy them explicitly
+        [ ! -f package-temp/manifest.json ] && cp manifest.json package-temp/
+        [ ! -f package-temp/icon16.png ] && cp icon16.png package-temp/
+        [ ! -f package-temp/icon48.png ] && cp icon48.png package-temp/
+        [ ! -f package-temp/icon128.png ] && cp icon128.png package-temp/
+        
+        # Create zip from inside the package-temp directory
+        cd package-temp
+        zip -r "../i-dont-like-that-v${{ steps.bump_version.outputs.new_version }}.zip" *
+        cd ..
+        
+        # Clean up
+        rm -rf package-temp
 
     - name: Generate changelog
       id: changelog
