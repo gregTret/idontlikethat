@@ -1,0 +1,22 @@
+{
+  "name": "i-dont-like-that",
+  "version": "1.0.0",
+  "description": "Chrome Extension for UI feedback and prompt generation",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "package": "npm run build && node scripts/package.js",
+    "version:patch": "npm version patch --no-git-tag-version && node scripts/sync-manifest-version.js",
+    "version:minor": "npm version minor --no-git-tag-version && node scripts/sync-manifest-version.js",
+    "version:major": "npm version major --no-git-tag-version && node scripts/sync-manifest-version.js"
+  },
+  "devDependencies": {
+    "@types/archiver": "^6.0.3",
+    "@types/chrome": "^0.0.266",
+    "archiver": "^7.0.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.12"
+  }
+}

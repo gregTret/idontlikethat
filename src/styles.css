@@ -1,0 +1,265 @@
+:root {
+  --idlt-primary: #5c7cfa;
+  --idlt-danger: #fa5252;
+  --idlt-success: #51cf66;
+  --idlt-bg: #ffffff;
+  --idlt-text: #212529;
+  --idlt-border: #dee2e6;
+  --idlt-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+body.idlt-selection-mode {
+  cursor: crosshair !important;
+}
+
+body.idlt-selection-mode * {
+  cursor: crosshair !important;
+}
+
+.idlt-hover {
+  outline: 2px solid var(--idlt-primary) !important;
+  outline-offset: 2px !important;
+  background-color: rgba(92, 124, 250, 0.1) !important;
+}
+
+.idlt-toggle-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--idlt-primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: var(--idlt-shadow);
+  z-index: 999999;
+  transition: all 0.3s ease;
+}
+
+.idlt-toggle-button:hover {
+  transform: scale(1.1);
+}
+
+.idlt-toggle-button.active {
+  background-color: var(--idlt-danger);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(250, 82, 82, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(250, 82, 82, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(250, 82, 82, 0);
+  }
+}
+
+.idlt-comment-box {
+  background-color: var(--idlt-bg);
+  border: 1px solid var(--idlt-border);
+  border-radius: 8px;
+  box-shadow: var(--idlt-shadow);
+  width: 320px;
+  z-index: 999998;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.idlt-comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--idlt-border);
+  font-weight: 600;
+  color: var(--idlt-text);
+}
+
+.idlt-close-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #868e96;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.idlt-close-btn:hover {
+  background-color: #f1f3f5;
+  color: var(--idlt-danger);
+}
+
+.idlt-comment-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px 16px;
+  border: none;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--idlt-text);
+  outline: none;
+}
+
+.idlt-comment-actions {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--idlt-border);
+}
+
+.idlt-save-btn,
+.idlt-cancel-btn,
+.idlt-copy-prompt-btn,
+.idlt-delete-btn {
+  padding: 6px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.idlt-save-btn,
+.idlt-copy-prompt-btn {
+  background-color: var(--idlt-primary);
+  color: white;
+}
+
+.idlt-save-btn:hover,
+.idlt-copy-prompt-btn:hover {
+  background-color: #4c6ef5;
+}
+
+.idlt-cancel-btn {
+  background-color: #f1f3f5;
+  color: var(--idlt-text);
+}
+
+.idlt-cancel-btn:hover {
+  background-color: #e9ecef;
+}
+
+.idlt-delete-btn {
+  background-color: var(--idlt-danger);
+  color: white;
+}
+
+.idlt-delete-btn:hover {
+  background-color: #f03e3e;
+}
+
+.idlt-comment-marker {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background-color: var(--idlt-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 999997;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s;
+}
+
+.idlt-comment-marker:hover {
+  transform: scale(1.1);
+}
+
+.idlt-comment-details {
+  background-color: var(--idlt-bg);
+  border: 1px solid var(--idlt-border);
+  border-radius: 8px;
+  box-shadow: var(--idlt-shadow);
+  width: 320px;
+  z-index: 999998;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.idlt-comment-content {
+  padding: 16px;
+  color: var(--idlt-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.idlt-comment-meta {
+  padding: 0 16px 12px;
+  color: #868e96;
+  font-size: 12px;
+}
+
+.idlt-selection-indicator {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--idlt-primary);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 999999;
+  box-shadow: var(--idlt-shadow);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+.idlt-copy-notification {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  background-color: var(--idlt-success);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 999999;
+  box-shadow: var(--idlt-shadow);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate Extension Icons</title>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <script>
+    function createIcon(size) {
+      const canvas = document.getElementById('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      
+      // Background
+      ctx.fillStyle = '#5c7cfa';
+      ctx.beginPath();
+      ctx.arc(size/2, size/2, size/2, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Text
+      ctx.fillStyle = 'white';
+      ctx.font = `bold ${size * 0.5}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('💬', size/2, size/2);
+      
+      // Download
+      canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `icon${size}.png`;
+        a.click();
+      });
+    }
+    
+    // Generate all sizes
+    setTimeout(() => createIcon(16), 100);
+    setTimeout(() => createIcon(48), 500);
+    setTimeout(() => createIcon(128), 1000);
+  </script>
+</body>
+</html>

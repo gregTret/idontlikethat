@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate Icons</title>
+</head>
+<body>
+  <h1>Icon Generator</h1>
+  <p>Right-click and save each icon:</p>
+  <div>
+    <h3>16x16</h3>
+    <canvas id="icon16" width="16" height="16"></canvas>
+  </div>
+  <div>
+    <h3>48x48</h3>
+    <canvas id="icon48" width="48" height="48"></canvas>
+  </div>
+  <div>
+    <h3>128x128</h3>
+    <canvas id="icon128" width="128" height="128"></canvas>
+  </div>
+  
+  <script>
+    function drawIcon(canvasId, size) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext('2d');
+      
+      // Background circle
+      ctx.fillStyle = '#5c7cfa';
+      ctx.beginPath();
+      ctx.arc(size/2, size/2, size/2, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // White speech bubble
+      ctx.fillStyle = 'white';
+      const bubbleSize = size * 0.6;
+      const bubbleX = (size - bubbleSize) / 2;
+      const bubbleY = (size - bubbleSize) / 2;
+      
+      // Bubble body
+      ctx.beginPath();
+      ctx.roundRect(bubbleX, bubbleY, bubbleSize, bubbleSize * 0.75, bubbleSize * 0.2);
+      ctx.fill();
+      
+      // Bubble tail
+      ctx.beginPath();
+      ctx.moveTo(bubbleX + bubbleSize * 0.2, bubbleY + bubbleSize * 0.75);
+      ctx.lineTo(bubbleX + bubbleSize * 0.3, bubbleY + bubbleSize);
+      ctx.lineTo(bubbleX + bubbleSize * 0.4, bubbleY + bubbleSize * 0.75);
+      ctx.fill();
+    }
+    
+    // Draw all icons
+    drawIcon('icon16', 16);
+    drawIcon('icon48', 48);
+    drawIcon('icon128', 128);
+  </script>
+</body>
+</html>

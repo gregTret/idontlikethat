@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate EDIT Icons</title>
+</head>
+<body>
+    <h1>EDIT Icon Generator</h1>
+    <p>Right-click each canvas and save as PNG:</p>
+    
+    <h3>16x16</h3>
+    <canvas id="icon16" width="16" height="16" style="border: 1px solid #ccc; image-rendering: pixelated; width: 64px; height: 64px;"></canvas>
+    
+    <h3>48x48</h3>
+    <canvas id="icon48" width="48" height="48" style="border: 1px solid #ccc;"></canvas>
+    
+    <h3>128x128</h3>
+    <canvas id="icon128" width="128" height="128" style="border: 1px solid #ccc;"></canvas>
+    
+    <script>
+        function drawIcon(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Background with rounded corners
+            ctx.fillStyle = '#5c7cfa';
+            const radius = size * 0.15;
+            
+            ctx.beginPath();
+            ctx.moveTo(radius, 0);
+            ctx.lineTo(size - radius, 0);
+            ctx.quadraticCurveTo(size, 0, size, radius);
+            ctx.lineTo(size, size - radius);
+            ctx.quadraticCurveTo(size, size, size - radius, size);
+            ctx.lineTo(radius, size);
+            ctx.quadraticCurveTo(0, size, 0, size - radius);
+            ctx.lineTo(0, radius);
+            ctx.quadraticCurveTo(0, 0, radius, 0);
+            ctx.closePath();
+            ctx.fill();
+            
+            // White text
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            if (size === 16) {
+                // Just "E" for small size
+                ctx.font = 'bold 11px Arial';
+                ctx.fillText('E', size/2, size/2);
+            } else if (size === 48) {
+                ctx.font = 'bold 14px Arial';
+                ctx.fillText('EDIT', size/2, size/2);
+            } else {
+                ctx.font = 'bold 32px Arial';
+                ctx.fillText('EDIT', size/2, size/2);
+            }
+        }
+        
+        drawIcon('icon16', 16);
+        drawIcon('icon48', 48);
+        drawIcon('icon128', 128);
+        
+        // Auto-download function
+        function downloadCanvas(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        }
+        
+        // Add download buttons
+        setTimeout(() => {
+            const button = document.createElement('button');
+            button.textContent = 'Download All Icons';
+            button.onclick = () => {
+                downloadCanvas('icon16', 'icon16.png');
+                setTimeout(() => downloadCanvas('icon48', 'icon48.png'), 500);
+                setTimeout(() => downloadCanvas('icon128', 'icon128.png'), 1000);
+            };
+            document.body.appendChild(button);
+        }, 100);
+    </script>
+</body>
+</html>

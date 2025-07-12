@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>I Don't Like That</title>
+  <style>
+    body {
+      width: 300px;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    h1 {
+      font-size: 18px;
+      margin: 0 0 16px;
+      color: #212529;
+    }
+    .stats {
+      margin-bottom: 16px;
+      padding: 12px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+    }
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .stat-item:last-child {
+      margin-bottom: 0;
+    }
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .primary-btn {
+      background-color: #5c7cfa;
+      color: white;
+    }
+    .primary-btn:hover {
+      background-color: #4c6ef5;
+    }
+    .secondary-btn {
+      background-color: #f1f3f5;
+      color: #212529;
+    }
+    .secondary-btn:hover {
+      background-color: #e9ecef;
+    }
+    .danger-btn {
+      background-color: #fa5252;
+      color: white;
+    }
+    .danger-btn:hover {
+      background-color: #f03e3e;
+    }
+    .settings {
+      margin: 12px 0;
+      padding: 12px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+    }
+    .switch-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    .switch-container:last-child {
+      margin-bottom: 0;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .3s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #5c7cfa;
+    }
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+    .confirmation-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .confirmation-dialog {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      max-width: 280px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .confirmation-dialog h3 {
+      margin: 0 0 12px;
+      font-size: 16px;
+      color: #212529;
+    }
+    .confirmation-dialog p {
+      margin: 0 0 16px;
+      font-size: 14px;
+      color: #495057;
+    }
+    .confirmation-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+    .confirmation-buttons button {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <h1>I Don't Like That</h1>
+  
+  <div class="stats">
+    <div class="stat-item">
+      <span>Total Comments:</span>
+      <span id="totalComments">0</span>
+    </div>
+    <div class="stat-item">
+      <span>This Page:</span>
+      <span id="pageComments">0</span>
+    </div>
+  </div>
+  
+  <div class="settings">
+    <div class="switch-container">
+      <span>Enable extension</span>
+      <label class="switch">
+        <input type="checkbox" id="extensionEnabled">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="switch-container">
+      <span>Auto-copy on exit</span>
+      <label class="switch">
+        <input type="checkbox" id="autoCopyOnExit">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+  
+  <div class="actions">
+    <button id="toggleMode" class="primary-btn">Toggle Selection Mode</button>
+    <button id="exportJSON" class="secondary-btn">Export as JSON</button>
+    <button id="copyToClipboard" class="secondary-btn">Copy to Clipboard</button>
+    <button id="clearPage" class="danger-btn">Clear Page Comments</button>
+    <button id="clearAll" class="danger-btn">Clear All Comments</button>
+  </div>
+  
+  <div class="confirmation-overlay" id="confirmationOverlay">
+    <div class="confirmation-dialog">
+      <h3 id="confirmTitle">Confirm Action</h3>
+      <p id="confirmMessage">Are you sure?</p>
+      <div class="confirmation-buttons">
+        <button class="secondary-btn" id="confirmCancel">Cancel</button>
+        <button class="danger-btn" id="confirmAction">Delete</button>
+      </div>
+    </div>
+  </div>
+  
+  <script src="./popup.ts" type="module"></script>
+</body>
+</html>
