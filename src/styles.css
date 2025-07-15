@@ -181,6 +181,10 @@ body.idlt-selection-mode * {
   background-color: #f03e3e;
 }
 
+[data-theme="dark"] .idlt-delete-btn:hover {
+  background-color: #e03131;
+}
+
 .idlt-comment-marker {
   position: absolute;
   width: 24px;

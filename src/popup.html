@@ -209,12 +209,19 @@
       justify-content: center;
       z-index: 1000;
     }
+    body[data-theme="dark"] .confirmation-overlay {
+      background: rgba(0, 0, 0, 0.7);
+    }
     .confirmation-dialog {
-      background: white;
+      background: var(--popup-bg);
       border-radius: 8px;
       padding: 20px;
       max-width: 280px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--popup-border);
+    }
+    body[data-theme="dark"] .confirmation-dialog {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
     }
     .confirmation-dialog h3 {
       margin: 0 0 12px;
