@@ -554,7 +554,7 @@ class IDontLikeThat {
     const saveBtn = actionsDiv.querySelector('.idlt-save-btn') as HTMLButtonElement;
     const cancelBtn = actionsDiv.querySelector('.idlt-cancel-btn') as HTMLButtonElement;
     
-    saveBtn.addEventListener('click', async () => {
+    const saveChanges = async () => {
       const newComment = textarea.value.trim();
       if (newComment) {
         await this.updateComment(comment, newComment);
@@ -564,7 +564,9 @@ class IDontLikeThat {
         comment.comment = newComment;
         this.showCommentDetails(comment, marker);
       }
-    });
+    };
+    
+    saveBtn.addEventListener('click', saveChanges);
     
     cancelBtn.addEventListener('click', () => {
       // Refresh the details box without saving
@@ -572,9 +574,21 @@ class IDontLikeThat {
       this.showCommentDetails(comment, marker);
     });
     
-    // Focus the textarea
+    // Add keyboard event handling
+    textarea.addEventListener('keydown', async (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault(); // Prevent newline
+        await saveChanges();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        detailsBox.remove();
+        this.showCommentDetails(comment, marker);
+      }
+    });
+    
+    // Focus the textarea and place cursor at end
     textarea.focus();
-    textarea.select();
+    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
   }
   
   private async updateComment(comment: Comment, newText: string) {
