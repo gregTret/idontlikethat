@@ -129,10 +129,16 @@
       background-color: #4c6ef5;
     }
     .secondary-btn {
-      background-color: var(--popup-secondary-bg);
+      background-color: #e9ecef;
       color: var(--popup-text);
     }
+    body[data-theme="dark"] .secondary-btn {
+      background-color: var(--popup-secondary-bg);
+    }
     .secondary-btn:hover {
+      background-color: #dee2e6;
+    }
+    body[data-theme="dark"] .secondary-btn:hover {
       background-color: var(--popup-hover-bg);
     }
     .danger-btn {
