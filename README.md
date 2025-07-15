@@ -2,6 +2,8 @@
 
 A Chrome extension for providing UI feedback and generating prompts for improvements.
 
+**[Available on the Chrome Web Store](https://chromewebstore.google.com/detail/i-dont-like-that/eecbpcglnoikndenjcmmhnomnaifkdpc?authuser=0&hl=en)**
+
 ## Features
 
 - Click any element on a page to add feedback

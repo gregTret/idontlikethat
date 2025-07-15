@@ -19,6 +19,7 @@ class IDontLikeThat {
   private async init() {
     try {
       await this.loadExistingComments();
+      await this.loadTheme();
       this.createToggleButton();
       this.setupEventListeners();
       this.displayExistingComments();
@@ -28,6 +29,17 @@ class IDontLikeThat {
       // Still create the toggle button even if storage fails
       this.createToggleButton();
       this.setupEventListeners();
+    }
+  }
+  
+  private async loadTheme() {
+    try {
+      const result = await chrome.storage.local.get('settings');
+      const settings = result.settings || { theme: 'dark' };
+      const theme = settings.theme || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (error) {
+      console.error('Failed to load theme:', error);
     }
   }
 
@@ -441,6 +453,7 @@ class IDontLikeThat {
       </div>
       <div class="idlt-comment-actions">
         <button class="idlt-copy-prompt-btn">Copy Prompt</button>
+        <button class="idlt-edit-btn">Edit</button>
         <button class="idlt-delete-btn">Delete</button>
       </div>
     `;
@@ -454,6 +467,7 @@ class IDontLikeThat {
 
     const closeBtn = detailsBox.querySelector('.idlt-close-btn') as HTMLButtonElement;
     const copyBtn = detailsBox.querySelector('.idlt-copy-prompt-btn') as HTMLButtonElement;
+    const editBtn = detailsBox.querySelector('.idlt-edit-btn') as HTMLButtonElement;
     const deleteBtn = detailsBox.querySelector('.idlt-delete-btn') as HTMLButtonElement;
 
     closeBtn.addEventListener('click', () => detailsBox.remove());
@@ -473,6 +487,10 @@ class IDontLikeThat {
       setTimeout(() => {
         copyBtn.textContent = 'Copy Prompt';
       }, 2000);
+    });
+
+    editBtn.addEventListener('click', () => {
+      this.enterEditMode(comment, detailsBox, marker);
     });
 
     deleteBtn.addEventListener('click', async () => {
@@ -510,6 +528,89 @@ class IDontLikeThat {
       await navigator.clipboard.writeText(prompt);
     } catch (err) {
       console.error('Failed to copy prompt:', err);
+    }
+  }
+
+  private enterEditMode(comment: Comment, detailsBox: HTMLElement, marker: HTMLElement) {
+    const contentDiv = detailsBox.querySelector('.idlt-comment-content') as HTMLElement;
+    const actionsDiv = detailsBox.querySelector('.idlt-comment-actions') as HTMLElement;
+    
+    // Replace content with textarea
+    const textarea = document.createElement('textarea');
+    textarea.className = 'idlt-comment-textarea';
+    textarea.value = comment.comment;
+    textarea.style.width = '100%';
+    textarea.style.minHeight = '100px';
+    
+    contentDiv.innerHTML = '';
+    contentDiv.appendChild(textarea);
+    
+    // Replace actions with Save/Cancel buttons
+    actionsDiv.innerHTML = `
+      <button class="idlt-save-btn">Save</button>
+      <button class="idlt-cancel-btn">Cancel</button>
+    `;
+    
+    const saveBtn = actionsDiv.querySelector('.idlt-save-btn') as HTMLButtonElement;
+    const cancelBtn = actionsDiv.querySelector('.idlt-cancel-btn') as HTMLButtonElement;
+    
+    const saveChanges = async () => {
+      const newComment = textarea.value.trim();
+      if (newComment) {
+        await this.updateComment(comment, newComment);
+        // Refresh the details box
+        detailsBox.remove();
+        // Update the comment object
+        comment.comment = newComment;
+        this.showCommentDetails(comment, marker);
+      }
+    };
+    
+    saveBtn.addEventListener('click', saveChanges);
+    
+    cancelBtn.addEventListener('click', () => {
+      // Refresh the details box without saving
+      detailsBox.remove();
+      this.showCommentDetails(comment, marker);
+    });
+    
+    // Add keyboard event handling
+    textarea.addEventListener('keydown', async (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault(); // Prevent newline
+        await saveChanges();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        detailsBox.remove();
+        this.showCommentDetails(comment, marker);
+      }
+    });
+    
+    // Focus the textarea and place cursor at end
+    textarea.focus();
+    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+  }
+  
+  private async updateComment(comment: Comment, newText: string) {
+    try {
+      const result = await chrome.storage.local.get('comments');
+      const allComments: StorageData = result.comments || {};
+      
+      if (allComments[comment.pageUrl]) {
+        const commentIndex = allComments[comment.pageUrl].findIndex(c => c.id === comment.id);
+        if (commentIndex !== -1) {
+          allComments[comment.pageUrl][commentIndex].comment = newText;
+          await chrome.storage.local.set({ comments: allComments });
+          
+          // Update local array too
+          const localIndex = this.existingComments.findIndex(c => c.id === comment.id);
+          if (localIndex !== -1) {
+            this.existingComments[localIndex].comment = newText;
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Failed to update comment:', error);
     }
   }
 
@@ -603,7 +704,7 @@ async function initializeExtension() {
 // Initialize on load
 initializeExtension();
 
-// Listen for extension state changes from popup
+// Listen for messages from popup
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === 'UPDATE_EXTENSION_STATE') {
     if (message.enabled && !extensionInstance) {
@@ -616,4 +717,14 @@ chrome.runtime.onMessage.addListener((message) => {
     }
   }
   return true;
+});
+
+// Listen for storage changes (including theme changes)
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  if (namespace === 'local' && changes.settings) {
+    const newSettings = changes.settings.newValue;
+    if (newSettings && newSettings.theme) {
+      document.documentElement.setAttribute('data-theme', newSettings.theme);
+    }
+  }
 });

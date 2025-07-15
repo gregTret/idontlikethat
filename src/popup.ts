@@ -3,7 +3,7 @@ import { StorageData } from './types';
 // Load and save settings
 async function loadSettings() {
   const result = await chrome.storage.local.get('settings');
-  const settings = result.settings || { autoCopyOnExit: true, extensionEnabled: true };
+  const settings = result.settings || { autoCopyOnExit: true, extensionEnabled: true, theme: 'dark' };
   const autoCopyCheckbox = document.getElementById('autoCopyOnExit') as HTMLInputElement;
   if (autoCopyCheckbox) {
     autoCopyCheckbox.checked = settings.autoCopyOnExit;
@@ -12,15 +12,26 @@ async function loadSettings() {
   if (enabledCheckbox) {
     enabledCheckbox.checked = settings.extensionEnabled !== false;
   }
+  
+  // Load theme
+  const theme = settings.theme || 'dark';
+  document.body.setAttribute('data-theme', theme);
+  const themeToggle = document.getElementById('theme-toggle') as HTMLInputElement;
+  if (themeToggle) {
+    themeToggle.checked = theme === 'dark';
+  }
+  
   return settings;
 }
 
 async function saveSettings() {
   const autoCopyCheckbox = document.getElementById('autoCopyOnExit') as HTMLInputElement;
   const enabledCheckbox = document.getElementById('extensionEnabled') as HTMLInputElement;
+  const themeToggle = document.getElementById('theme-toggle') as HTMLInputElement;
   const settings = {
     autoCopyOnExit: autoCopyCheckbox.checked,
-    extensionEnabled: enabledCheckbox.checked
+    extensionEnabled: enabledCheckbox.checked,
+    theme: themeToggle?.checked ? 'dark' : 'light'
   };
   await chrome.storage.local.set({ settings });
   
@@ -319,3 +330,11 @@ document.getElementById('extensionEnabled')?.addEventListener('change', () => {
 // Initialize popup
 loadSettings();
 updateStats();
+
+// Add theme toggle event listener
+document.getElementById('theme-toggle')?.addEventListener('change', (e) => {
+  const target = e.target as HTMLInputElement;
+  const theme = target.checked ? 'dark' : 'light';
+  document.body.setAttribute('data-theme', theme);
+  saveSettings();
+});
