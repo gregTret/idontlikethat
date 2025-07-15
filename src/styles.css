@@ -6,6 +6,20 @@
   --idlt-text: #212529;
   --idlt-border: #dee2e6;
   --idlt-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --idlt-hover-bg: #f1f3f5;
+  --idlt-secondary-bg: #f8f9fa;
+}
+
+[data-theme="dark"] {
+  --idlt-primary: #748ffc;
+  --idlt-danger: #ff6b6b;
+  --idlt-success: #69db7c;
+  --idlt-bg: #1a1b1e;
+  --idlt-text: #e9ecef;
+  --idlt-border: #343a40;
+  --idlt-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --idlt-hover-bg: #25262b;
+  --idlt-secondary-bg: #212529;
 }
 
 body.idlt-selection-mode {
@@ -100,7 +114,7 @@ body.idlt-selection-mode * {
 }
 
 .idlt-close-btn:hover {
-  background-color: #f1f3f5;
+  background-color: var(--idlt-hover-bg);
   color: var(--idlt-danger);
 }
 
@@ -113,6 +127,7 @@ body.idlt-selection-mode * {
   font-family: inherit;
   font-size: 14px;
   color: var(--idlt-text);
+  background-color: var(--idlt-bg);
   outline: none;
 }
 
@@ -149,12 +164,12 @@ body.idlt-selection-mode * {
 }
 
 .idlt-cancel-btn {
-  background-color: #f1f3f5;
+  background-color: var(--idlt-secondary-bg);
   color: var(--idlt-text);
 }
 
 .idlt-cancel-btn:hover {
-  background-color: #e9ecef;
+  background-color: var(--idlt-hover-bg);
 }
 
 .idlt-delete-btn {
@@ -262,4 +277,37 @@ body.idlt-selection-mode * {
     transform: translateX(0);
     opacity: 1;
   }
+}
+
+.idlt-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+}
+
+.idlt-theme-toggle input[type="radio"] {
+  display: none;
+}
+
+.idlt-theme-toggle label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--idlt-secondary-bg);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 16px;
+}
+
+.idlt-theme-toggle label:hover {
+  background-color: var(--idlt-hover-bg);
+}
+
+.idlt-theme-toggle input[type="radio"]:checked + label {
+  background-color: var(--idlt-primary);
+  color: white;
 }

@@ -19,6 +19,7 @@ class IDontLikeThat {
   private async init() {
     try {
       await this.loadExistingComments();
+      await this.loadTheme();
       this.createToggleButton();
       this.setupEventListeners();
       this.displayExistingComments();
@@ -28,6 +29,17 @@ class IDontLikeThat {
       // Still create the toggle button even if storage fails
       this.createToggleButton();
       this.setupEventListeners();
+    }
+  }
+  
+  private async loadTheme() {
+    try {
+      const result = await chrome.storage.local.get('settings');
+      const settings = result.settings || { theme: 'dark' };
+      const theme = settings.theme || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (error) {
+      console.error('Failed to load theme:', error);
     }
   }
 
@@ -603,7 +615,7 @@ async function initializeExtension() {
 // Initialize on load
 initializeExtension();
 
-// Listen for extension state changes from popup
+// Listen for messages from popup
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === 'UPDATE_EXTENSION_STATE') {
     if (message.enabled && !extensionInstance) {
@@ -616,4 +628,14 @@ chrome.runtime.onMessage.addListener((message) => {
     }
   }
   return true;
+});
+
+// Listen for storage changes (including theme changes)
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  if (namespace === 'local' && changes.settings) {
+    const newSettings = changes.settings.newValue;
+    if (newSettings && newSettings.theme) {
+      document.documentElement.setAttribute('data-theme', newSettings.theme);
+    }
+  }
 });
